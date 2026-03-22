@@ -20,6 +20,17 @@
         .nav-links a { color: #333; }
         ul { margin: 0.5rem 0; padding-left: 1.25rem; }
         li { margin: 0.25rem 0; }
+        .form-group { margin: 1rem 0; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 0.25rem; font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; max-width: 100%; padding: 0.5rem; font-family: inherit; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #333; }
+        .form-group .hint { font-size: 0.85rem; color: #666; margin-top: 0.25rem; }
+        .btn-submit { background: #333; color: #fff; border: none; padding: 0.5rem 1.5rem; font-size: 1rem; border-radius: 4px; cursor: pointer; margin-top: 0.5rem; }
+        .btn-submit:hover { opacity: 0.9; }
+        .thanks { background: #e8f5e9; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; }
+        .thanks[data-lang="en"]:not(.active) { display: none !important; }
+        .thanks[data-lang="nl"]:not(.active) { display: none !important; }
     </style>
 </head>
 <body>
@@ -29,6 +40,7 @@
     </nav>
 
     <div data-lang="en" class="active">
+        <p class="thanks" data-lang="en" id="thanks-en" style="display:none">Thanks! Your feedback has been sent. I’ll read it soon.</p>
         <h1>Feedback</h1>
         <p class="updated">CardNest · I’d love to hear from you</p>
 
@@ -53,13 +65,42 @@
         </ul>
 
         <h2>Send feedback</h2>
-        <p><a href="mailto:curia.angels.labs@gmail.com?subject=CardNest%20Feedback">curia.angels.labs@gmail.com</a></p>
-        <p>You can write in English or Dutch.</p>
+        <p>Fill in the form below and I’ll receive it by email. You can write in English or Dutch.</p>
+
+        <form action="https://formsubmit.co/curia.angels.labs@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="CardNest Feedback">
+            <input type="hidden" name="_next" value="https://curiaangels.github.io/Labs/feedback.html?thanks=1">
+            <input type="hidden" name="_replyto" value="email">
+            <input type="text" name="_honey" style="display:none">
+            <div class="form-group">
+                <label for="name-en">Name</label>
+                <input type="text" id="name-en" name="name" placeholder="Optional">
+            </div>
+            <div class="form-group">
+                <label for="email-en">Email</label>
+                <input type="email" id="email-en" name="email" placeholder="Optional — so I can reply">
+            </div>
+            <div class="form-group">
+                <label for="category-en">About</label>
+                <select id="category-en" name="category">
+                    <option value="Look and feel">Look and feel</option>
+                    <option value="What's missing">What's missing?</option>
+                    <option value="Bug">Bug</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message-en">Message</label>
+                <textarea id="message-en" name="message" placeholder="Your feedback…" required></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Send</button>
+        </form>
 
         <p class="nav-links"><a href="index.html">← Privacy policy</a></p>
     </div>
 
     <div data-lang="nl">
+        <p class="thanks" data-lang="nl" id="thanks-nl" style="display:none">Bedankt! Je feedback is verzonden. Ik lees het snel.</p>
         <h1>Feedback</h1>
         <p class="updated">CardNest · Ik hoor graag van je</p>
 
@@ -84,13 +125,48 @@
         </ul>
 
         <h2>Feedback sturen</h2>
-        <p><a href="mailto:curia.angels.labs@gmail.com?subject=CardNest%20Feedback">curia.angels.labs@gmail.com</a></p>
-        <p>Je mag in het Engels of Nederlands schrijven.</p>
+        <p>Vul het formulier in en ik ontvang het per e-mail. Je mag in het Engels of Nederlands schrijven.</p>
+
+        <form action="https://formsubmit.co/curia.angels.labs@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="CardNest Feedback">
+            <input type="hidden" name="_next" value="https://curiaangels.github.io/Labs/feedback.html?thanks=1">
+            <input type="hidden" name="_replyto" value="email">
+            <input type="text" name="_honey" style="display:none">
+            <div class="form-group">
+                <label for="name-nl">Naam</label>
+                <input type="text" id="name-nl" name="name" placeholder="Optioneel">
+            </div>
+            <div class="form-group">
+                <label for="email-nl">E-mail</label>
+                <input type="email" id="email-nl" name="email" placeholder="Optioneel — om te kunnen reageren">
+            </div>
+            <div class="form-group">
+                <label for="category-nl">Over</label>
+                <select id="category-nl" name="category">
+                    <option value="Uiterlijk en gevoel">Uiterlijk en gevoel</option>
+                    <option value="Wat ontbreekt er">Wat ontbreekt er?</option>
+                    <option value="Bug">Bug</option>
+                    <option value="Overig">Overig</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message-nl">Bericht</label>
+                <textarea id="message-nl" name="message" placeholder="Jouw feedback…" required></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Versturen</button>
+        </form>
 
         <p class="nav-links"><a href="index.html">← Privacybeleid</a></p>
     </div>
 
     <script>
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('thanks') === '1') {
+            var langEl = document.querySelector('.lang-switch a.active') || document.querySelector('[data-set-lang="en"]');
+            var langVal = (langEl && langEl.getAttribute('data-set-lang')) || 'en';
+            var thanksEl = document.getElementById('thanks-' + langVal);
+            if (thanksEl) thanksEl.style.display = 'block';
+        }
         document.querySelectorAll('[data-set-lang]').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -99,6 +175,12 @@
                 document.querySelectorAll('[data-set-lang]').forEach(function(b) { b.classList.remove('active'); });
                 document.querySelector('[data-lang="' + lang + '"]').classList.add('active');
                 this.classList.add('active');
+                if (params.get('thanks') === '1') {
+                    var thanksEn = document.getElementById('thanks-en');
+                    var thanksNl = document.getElementById('thanks-nl');
+                    if (thanksEn) thanksEn.style.display = lang === 'en' ? 'block' : 'none';
+                    if (thanksNl) thanksNl.style.display = lang === 'nl' ? 'block' : 'none';
+                }
             });
         });
     </script>
